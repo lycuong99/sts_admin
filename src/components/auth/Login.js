@@ -55,17 +55,34 @@ const styles = (Theme) => createStyles({
 });
 
 class Login extends Component {
-    renderInput = ({ label, input, InputProps }) => {
+
+    handleAuth = () => {
+        const { authenticated } = this.props;
+        if (authenticated === true && window.location.pathname === "/login") {
+            history.push("/");
+        }
+    }
+
+    componentDidMount = () => {
+        this.handleAuth();
+    }
+
+    componentDidUpdate = () => {
+        this.handleAuth();
+    }
+
+    renderInput = ({ label, input, meta: { touched, invalid, error }, InputProps }) => {
         return (
             <div>
                 <FormControl margin="normal" fullWidth>
                     <FormLabel>{label}</FormLabel>
-                    <TextField  {...input} variant="outlined" InputProps={InputProps} />
+                    <TextField  {...input} variant="outlined" InputProps={InputProps} error={touched && invalid}
+                        helperText={touched && error} />
                 </FormControl>
             </div>);
     }
 
-    renderPassword = ({ label, input }) => {
+    renderPassword = ({ label, input, meta: { touched, invalid, error }, }) => {
         return (
             <div>
                 <FormControl margin="normal" fullWidth>
@@ -74,7 +91,9 @@ class Login extends Component {
                         endAdornment: (<InputAdornment position="end">
                             <LockOutlined />
                         </InputAdornment>)
-                    }} />
+                    }}
+                        error={touched && invalid}
+                        helperText={touched && error} />
                 </FormControl>
 
             </div>);
@@ -87,6 +106,7 @@ class Login extends Component {
 
         this.props.signIn(email, password);
         console.log({ email, password });
+        console.log('alo');
 
     }
     render() {
@@ -96,7 +116,7 @@ class Login extends Component {
             <div className={classes.wrapper}>
                 <Container maxWidth="sm" style={{ paddingTop: '12%' }}>
                     <Typography variant="h4" style={{ textAlign: 'center' }}>Log in</Typography>
-                    <form autoComplete="off" className={classes.form} onSubmit={this.props.handleSubmit(this.onSubmit)}>
+                    <form autoComplete="off" className={classes.form} onSubmit={this.props.handleSubmit(this.onSubmit)} >
                         <Field name="email" component={this.renderInput} label="Email" InputProps={{
                             endAdornment: (<InputAdornment position="end">
                                 <PersonOutline />
@@ -116,11 +136,30 @@ class Login extends Component {
     }
 }
 
+//TODO Invalid email or password error
+const validate = (formValues) => {
+    const error = {};
+
+    if (!formValues.email) {
+        error.email = "You must enter a email";
+    }
+    if (!formValues.password) {
+        error.password = "You must enter a password";
+    }
+    return error;
+}
+
 const loginForm = reduxForm({
-    form: "loginForm"
+    form: "loginForm",
+    validate
 })(withStyles(styles)(Login));
 
-export default connect(null,
+const mapStateToProps = (state) => {
+    return {
+        authenticated: state.auth.authenticated
+    }
+}
+export default connect(mapStateToProps,
     {
         signIn,
         signInWithGoogle

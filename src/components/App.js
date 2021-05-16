@@ -6,8 +6,10 @@ import history from "../history";
 import { connect } from "react-redux";
 import RequireAuth from './auth/RequireAuth';
 import Logout from './auth/Logout';
+
 import { Home } from '@material-ui/icons';
 
+import UserTable from './UserTable';
 
 class App extends React.Component {
 
@@ -17,21 +19,21 @@ class App extends React.Component {
       <div>
 
         <Router forceRefresh={true} history={history} >
+
         <Switch>
           <Route path='/login' exact >
               <Login />
             </Route>
-            {/* <Route path='/home' exact >
-              <Home />
-            </Route> */}
+
             <Route path='/' exact >
               <RequireAuth>
-                HomePage admin
-                {"token:" + localStorage.getItem("token")}
+                <UserTable />
                 <Logout />
               </RequireAuth>
             </Route>
-            </Switch>
+
+
+          </Switch>
         </Router>
 
       </div>
