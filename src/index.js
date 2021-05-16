@@ -6,6 +6,8 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import App from './components/App';
 import reducers from './reducers';
 import { SIGN_IN } from './types';
+import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
+import Home from "./components/Home.js";
 // import reportWebVitals from './reportWebVitals';
 
 const composeEnhancers = (typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose;
@@ -30,7 +32,13 @@ ReactDOM.render(
     <App />
   </Provider>
   ,
-  document.getElementById('root')
+  // <BrowserRouter>
+  //   <Switch>
+  //     <Route path="/home" component={Home} />
+  //     <Redirect from="/" to="/home/user" />
+  //   </Switch>
+  // </BrowserRouter>,
+  // document.getElementById('root')
 );
 
 // If you want to start measuring performance in your app, pass a function
