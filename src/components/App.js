@@ -6,34 +6,34 @@ import history from "../history";
 import { connect } from "react-redux";
 import RequireAuth from './auth/RequireAuth';
 import Logout from './auth/Logout';
-
 import { Home } from '@material-ui/icons';
-
 import UserTable from './UserTable';
+import routes from '../router';
+import Sidebar from '../components/Sidebar/Sidebar.js';
+
 
 class App extends React.Component {
+
+
 
   render() {
 
     return (
+      
       <div>
 
         <Router forceRefresh={true} history={history} >
-
-        <Switch>
-          <Route path='/login' exact >
+          <Switch>
+            <Route path='/login' exact >
               <Login />
             </Route>
-
             <Route path='/' exact >
               <RequireAuth>
                 <UserTable />
                 <Logout />
               </RequireAuth>
             </Route>
-
-
-          </Switch>
+             </Switch>
         </Router>
 
       </div>
