@@ -20,5 +20,8 @@ export default createMuiTheme({
         }
 
     },
+    typography: {
+        fontFamily: ['Roboto',].join(','),
+    }
 
 });
