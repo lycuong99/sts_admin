@@ -13,7 +13,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import ListItem from "@material-ui/core/ListItem";
-import { Icon, SwipeableDrawer } from "@material-ui/core";
+import { Drawer, Icon } from "@material-ui/core";
 import GroupOutlinedIcon from '@material-ui/icons/GroupOutlined';
 import BusinessOutlinedIcon from '@material-ui/icons/BusinessOutlined';
 import ProfileIcon from "@material-ui/icons/Person";
@@ -145,7 +145,7 @@ export default function PersistentDrawerLeft(props) {
       </AppBar>
 
         
-      <SwipeableDrawer
+      <Drawer
         className={classes.drawer}
         variant="persistent"
         anchor="left"
@@ -183,7 +183,7 @@ export default function PersistentDrawerLeft(props) {
         </List>
         <Divider />
         <Logout/>
-      </SwipeableDrawer>
+      </Drawer>
       <main
         className={clsx(classes.content, {
           [classes.contentShift]: open,
