@@ -8,8 +8,8 @@ import RequireAuth from './auth/RequireAuth';
 import Logout from './auth/Logout';
 import { Home } from '@material-ui/icons';
 import UserTable from './UserTable';
-import routes from '../router';
-import Sidebar from '../components/Sidebar/Sidebar.js';
+import BrandTable from './BrandTable';
+import Layout from './Layout';
 
 
 class App extends React.Component {
@@ -19,23 +19,28 @@ class App extends React.Component {
   render() {
 
     return (
-      
-      <div>
 
+      <div>
         <Router forceRefresh={true} history={history} >
           <Switch>
             <Route path='/login' exact >
               <Login />
             </Route>
-            <Route path='/' exact >
-              <RequireAuth>
-                <UserTable />
-                <Logout />
-              </RequireAuth>
-            </Route>
-             </Switch>
+            <RequireAuth>
+              <Layout>
+                <Route path='/' exact >
+                  <UserTable />
+                </Route>
+                <Route path='/user' exact >
+                  <UserTable />
+                </Route>
+                <Route path='/company' exact >
+                  <BrandTable />
+                </Route>
+              </Layout>
+            </RequireAuth>
+          </Switch>
         </Router>
-
       </div>
     );
   }
