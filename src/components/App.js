@@ -5,42 +5,44 @@ import Login from './auth/Login';
 import history from "../history";
 import { connect } from "react-redux";
 import RequireAuth from './auth/RequireAuth';
-import Logout from './auth/Logout';
-import { Home } from '@material-ui/icons';
 import UserTable from './UserTable';
 import BrandTable from './BrandTable';
-import Layout from './Layout';
-
+import Layout from './layout';
+import Profile from './Profile';
+import theme from '../themes/Theme';
+import { ThemeProvider } from '@material-ui/styles';
 
 class App extends React.Component {
-
-
 
   render() {
 
     return (
-
       <div>
-        <Router forceRefresh={true} history={history} >
-          <Switch>
-            <Route path='/login' exact >
-              <Login />
-            </Route>
-            <RequireAuth>
-              <Layout>
-                <Route path='/' exact >
-                  <UserTable />
-                </Route>
-                <Route path='/user' exact >
-                  <UserTable />
-                </Route>
-                <Route path='/company' exact >
-                  <BrandTable />
-                </Route>
-              </Layout>
-            </RequireAuth>
-          </Switch>
-        </Router>
+        <ThemeProvider theme={theme}>
+          <Router forceRefresh={true} history={history} >
+            <Switch>
+              <Route path='/login' exact >
+                <Login />
+              </Route>
+              <RequireAuth>
+                <Layout>
+                  <Route path='/' exact >
+                    <UserTable />
+                  </Route>
+                  <Route path='/user' exact >
+                    <UserTable />
+                  </Route>
+                  <Route path='/brand' exact >
+                    <BrandTable />
+                  </Route>
+                  <Route path='/profile' exact >
+                    <Profile />
+                  </Route>
+                </Layout>
+              </RequireAuth>
+            </Switch>
+          </Router>
+        </ThemeProvider>
       </div>
     );
   }

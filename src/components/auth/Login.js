@@ -1,5 +1,5 @@
 
-import { Button, Container, FormControl, FormLabel, InputAdornment, makeStyles, TextField, Typography } from '@material-ui/core';
+import { Button, Container, FormControl, FormLabel, Hidden, InputAdornment, makeStyles, TextField, Typography } from '@material-ui/core';
 import { LockOutlined, PersonOutline } from '@material-ui/icons';
 import React, { Component } from 'react';
 import { Field, reduxForm } from 'redux-form';
@@ -103,7 +103,6 @@ class Login extends Component {
 
 
     onSubmit = ({ email, password }) => {
-
         this.props.signIn(email, password);
         console.log({ email, password });
         console.log('alo');
@@ -111,11 +110,12 @@ class Login extends Component {
     }
     render() {
         const { classes } = this.props;
-        console.log("token:" + localStorage.getItem("token"));
+        console.log(this.props.invalidServer);
+        console.log("token:" + localStorage.getItem("sts_token"));
         return (
             <div className={classes.wrapper}>
                 <Container maxWidth="sm" style={{ paddingTop: '12%' }}>
-                    <Typography variant="h4" style={{ textAlign: 'center' }}>Log in</Typography>
+                    <Typography variant="h1" style={{ textAlign: 'center' }} color='primary'>Log in</Typography>
                     <form autoComplete="off" className={classes.form} onSubmit={this.props.handleSubmit(this.onSubmit)} >
                         <Field name="email" component={this.renderInput} label="Email" InputProps={{
                             endAdornment: (<InputAdornment position="end">
@@ -123,6 +123,13 @@ class Login extends Component {
                             </InputAdornment>)
                         }} />
                         <Field name="password" component={this.renderPassword} label="Password" />
+                        {
+                            this.props.invalidServer === true ? (<Typography variant="h4" style={{color: '#f44336'}}> 
+                                Invalid Username or Password!
+                            </Typography>) : null
+                        }
+
+
                         <Button color="primary" variant="contained" className={classes.button} type="submit">Log in</Button>
                         <div className={classes.lineDivider}>
                             <span>or login with</span>
@@ -156,7 +163,8 @@ const loginForm = reduxForm({
 
 const mapStateToProps = (state) => {
     return {
-        authenticated: state.auth.authenticated
+        authenticated: state.auth.authenticated,
+        invalidServer: state.auth.invalid
     }
 }
 export default connect(mapStateToProps,

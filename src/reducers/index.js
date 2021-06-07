@@ -1,10 +1,12 @@
 import userReducer, { useReducer } from "./userReducer";
 import { combineReducers } from "redux";
-import {reducer as reducerForm} from 'redux-form';
+import { reducer as reducerForm } from 'redux-form';
 import authReducer from "./authReducer";
+import brandReducer from "./brandReducer";
 
 export default combineReducers({
-    form : reducerForm,
+    form: reducerForm,
     auth: authReducer,
-    users: userReducer
+    users: userReducer,
+    brands: brandReducer
 });

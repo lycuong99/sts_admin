@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseURL = "";
+const baseURL = "https://sts-project.azurewebsites.net/api/";
 export default axios.create({
-    baseURL: "http://localhost:3001"
+    baseURL: baseURL
 });

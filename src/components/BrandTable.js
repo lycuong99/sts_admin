@@ -2,12 +2,15 @@ import React from 'react';
 import { DataGrid } from '@material-ui/data-grid';
 import { connect } from 'react-redux';
 import { Button, Container, createStyles, Dialog, DialogContent, DialogContentText, DialogTitle, DialogActions, InputAdornment, TextField, withStyles, Paper } from '@material-ui/core';
-import { getUsers, deleteUser } from "../actions";
+import { getBrands, deleteBrand } from "../actions";
 import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined';
 import AddIcon from '@material-ui/icons/Add';
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
-import AddUser from './dialogs/AddUser';
+import { brands } from '../dataTest.js/brand';
+import _ from 'lodash';
+
+
 
 
 const styles = (Theme) => createStyles({
@@ -73,40 +76,17 @@ const styles = (Theme) => createStyles({
     }
 })
 
-class UserTable extends React.Component {
+class BrandTable extends React.Component {
 
-    state = {
-        searchValue: '', openDeleteDialog: false, deleteUserId: null, openAddDialog: false,
-        pageSize: 10, rowCount:0, pageIndex:0, loading:false, datas:this.props.users
-    };
+    state = { searchValue: '', openDeleteDialog: false, deleteId: null };
 
     handleSearchValueChange = (event) => {
         this.setState({ searchValue: event.target.value });
-    }
 
-    handleSearchSubmit = (e)=>{
-        // console.log(e);
-        if(e.which == 13)
-        {
-            console.log('enter');
-        }
     }
     componentDidMount() {
-        this.props.getUsers();
+        this.props.getBrands();
     }
-
-    componentDidUpdate(prevProps, prevState) {
-        if (prevState.pageSize !== this.state.pageSize || prevState.pageIndex !== this.state.pageIndex) {
-            const {searchValue, pageSize, pageIndex} = this.state;
-           const response = this.loadData(searchValue, pageSize, pageIndex);
-        }
-    }
-
-    loadData = (search, pageSize,pageIndex)=>{
-        return {};
-    }
-
-
 
     renderToolbar = () => {
         return (
@@ -116,11 +96,9 @@ class UserTable extends React.Component {
                         <SearchOutlinedIcon />
                     </InputAdornment>)
                 }} value={this.state.searchValue}
-                    onChange={this.handleSearchValueChange}
-                    onKeyPress={this.handleSearchSubmit} />
+                    onChange={this.handleSearchValueChange} />
 
-                <Button variant="outlined" className={this.props.classes.searchButton}
-                    onClick={() => { this.setState({ openAddDialog: !this.state.openAddDialog }) }}> <AddIcon />ADD USER</Button>
+                <Button variant="outlined" className={this.props.classes.searchButton}> <AddIcon />ADD BRAND</Button>
             </div>
         );
     }
@@ -131,6 +109,7 @@ class UserTable extends React.Component {
             this.setState({ openDeleteDialog: false });
         }
 
+        console.log(_.filter(this.props.brands, ['id', this.state.deleteId])[0]?.name);
         return (
             <Dialog
                 open={this.state.openDeleteDialog}
@@ -141,54 +120,42 @@ class UserTable extends React.Component {
                 <DialogTitle id="alert-dialog-title">{"Delete Dialog?"}</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        {`Do you want to delete user: ${this.state.deleteUserId}`}
+                        {`Do you want to delete brand: ${_.filter(this.props.brands, ['id', this.state.deleteId])[0]?.name}`}
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">
                         Cancel
   </Button>
-                    <Button onClick={() => { this.props.deleteUser(this.state.deleteUserId); this.setState({ deleteUserId: null }); handleClose(); }} color="primary" autoFocus>
+                    <Button onClick={() => { this.props.deleteBrand(this.state.deleteId); this.setState({ deleteId: null }); handleClose(); }} color="primary" autoFocus>
                         Confirm
   </Button>
-  
                 </DialogActions>
             </Dialog>
         );
     }
 
-    handlePageSizeChange = (params) => {
-        // setPageSize(params.pageSize);
-    };
-
-   
     render() {
         const { classes } = this.props;
         const columns = [
-            { field: 'no', headerName: 'ID', width: 70, headerClassName: 'header-table', filterable: false },
+            { field: 'id', headerName: 'ID', width: 70, headerClassName: 'header-table' },
             {
-                field: 'name', headerName: 'Full name', width: 200,
-                // valueGetter: (params) => {
-                //     return `${params.getValue('firstName') || ''} ${params.getValue('lastName') || ''}`
-                // }
+                field: 'name', headerName: 'Brand Name', flex: 1,
             },
             {
-                field: 'address', headerName: 'Address', headerClassName: 'header-table', width: 160, filterable: false,  sortable: false
+                field: 'hotline', headerName: 'Hot Line', headerClassName: 'header-table', width: 160,
             },
             {
-                field: 'email', headerName: 'Email', flex: 1, filterable: false,  sortable: false
+                field: 'totalStaffs', headerName: 'Headquarter', headerClassName: 'header-table', width: 160,
             },
             {
-                field: 'isAdmin', headerName: 'Is Admin', width: 130, filterable: false,  sortable: false
-            },
-            {
-                field: 'action', headerName: "Actions",  flex: 0.3, sortable: false, filterable: false,
-                headerAlign: 'center',
+                field: 'action', headerName: "Actions", flex: 0.3, sortable: false,
+                headerAlign: 'left',
 
                 renderCell: (params) => {
                     const onClick = () => {
-                        this.setState({ openDeleteDialog: true, deleteUserId: params.getValue('email') });
-                        // this.setState({ deleteUserId: params.getValue('email') });
+                        this.setState({ openDeleteDialog: true, deleteId: params.getValue('id') });
+                        // this.setState({ deleteId: params.getValue('email') });
                         // alert('hello');
                     }
 
@@ -211,37 +178,31 @@ class UserTable extends React.Component {
             // },
         ];
 
-        if (!this.props.users) {
-
+        if (!this.props.brands) {
             return <p>...Loading</p>;
         }
 
-        const checkCondition = (user) => {
-            return user.name.includes(this.state.searchValue) || user.email.includes(this.state.searchValue) || user.address.includes(this.state.searchValue);
-        }
+        const rows = this.props.brands;
 
-        const rows = this.props.users.filter(checkCondition);
 
         return (
             <Paper className={this.props.classes.container}>
-                <h2>User</h2>
                 {this.renderToolbar()}
-                <div style={{ height: 600, width: '100%' }}>
-                    <DataGrid disableColumnFilter rows={this.props.users} columns={columns} rowsPerPageOptions={[10, 20, 50]} pageSize={this.state.pageSize} pagination
-                        paginationMode="server" rowCount={100} />
+                <div style={{ height: 400, width: '100%' }}>
+                    <DataGrid rows={rows} columns={columns} pageSize={5} hideFooterPagination={false} />
                 </div>
                 {this.renderDeleteDialog()}
-                <AddUser open={this.state.openAddDialog} handleClose={() => { this.setState({ openAddDialog: false }) }} />
             </Paper>
 
         );
     }
 }
+
 const mapStateToProps = (state) => {
-    return { users: Object.values(state.users) };
+    return { brands: Object.values(state.brands) };
 }
 
 export default connect(mapStateToProps, {
-    getUsers, deleteUser
-})(withStyles(styles, { withTheme: true })(UserTable));
+    getBrands, deleteBrand
+})(withStyles(styles, { withTheme: true })(BrandTable));
 

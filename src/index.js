@@ -13,14 +13,13 @@ const composeEnhancers = (typeof window !== 'undefined' && window.__REDUX_DEVTOO
 
 const store = createStore(reducers, composeEnhancers(applyMiddleware(thunk)));
 
-const token = localStorage.getItem('token');
+
 // const userId = localStorage.getItem('user');
-if (token) {
-  let username = "lycuong";
-  let password = "123";
+if (JwtToken.get()) {
+  let username = "admin";
   store.dispatch({
     type: SIGN_IN, payload: {
-      username, password
+      username
     }
   });
 }
