@@ -6,6 +6,7 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import App from './components/App';
 import reducers from './reducers';
 import { SIGN_IN } from './types';
+import JwtToken from './jwtToken';
 // import reportWebVitals from './reportWebVitals';
 
 const composeEnhancers = (typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose;
@@ -14,7 +15,6 @@ const composeEnhancers = (typeof window !== 'undefined' && window.__REDUX_DEVTOO
 const store = createStore(reducers, composeEnhancers(applyMiddleware(thunk)));
 
 
-// const userId = localStorage.getItem('user');
 if (JwtToken.get()) {
   let username = "admin";
   store.dispatch({

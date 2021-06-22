@@ -1,7 +1,6 @@
-import { SIGN_IN, SIGN_IN_GOOGLE, AUTHENTICATE_THE_USER, SIGN_OUT, GET_USERS, DELETE_USER, SIGN_IN_FAIL, GET_BRANDS, DELETE_BRAND } from "../types";
+import { SIGN_IN, SIGN_IN_GOOGLE, AUTHENTICATE_THE_USER, SIGN_OUT, GET_USERS, DELETE_USER, SIGN_IN_FAIL, GET_BRANDS, DELETE_BRAND, GET_USER } from "../types";
 import history from "../history";
 import sts from '../apis/sts';
-import { users } from "../dataTest.js/user";
 import JwtToken from "../jwtToken";
 
 export const signIn = (username, password) => async (dispatch) => {
@@ -20,7 +19,9 @@ export const signIn = (username, password) => async (dispatch) => {
                     username
                 }
             });
-            localStorage.setItem('sts_token', response.data.token);
+            JwtToken.set(response.data.token);
+            JwtToken.setUsername(username);
+
             history.replace("/");
         }
     } catch (error) {
@@ -56,25 +57,63 @@ export const logOut = () => {
 
 //USER
 export const getUsers = (pageIndex, pageSize, searchValue) => async dispatch => {
-    //TODO fix
-    // const response = await sts.get('/users');
-    const responseTmp = users;
-    dispatch({ type: GET_USERS, payload: responseTmp });
+    try {
+        // console.log(JwtToken.get());
+
+        if (searchValue === "") {
+            searchValue = null;
+        }
+        const response = await sts.get("/users", {
+            headers: {
+                "Authorization": `Bearer ${JwtToken.get()}`,
+            },
+            params: {
+                PageNumber: pageIndex,
+                PageSize: pageSize,
+                KeyWord: searchValue
+            }
+        });
+        console.log(response);
+        console.log(1);
+
+        console.log();
+        dispatch({ type: GET_USERS, payload: { datas: response.data, ...JSON.parse(response.headers.pagination), searchValue } });
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 export const getUser = (id) => async dispatch => {
     //TODO fix
-    // const response = await sts.get('/users');
-    const responseTmp = users;
-    console.log(responseTmp);
-    dispatch({ type: GET_USERS, payload: responseTmp });
+    try {
+        const api = `/users/${id}`;
+        const response = await sts.get(api, { headers: { "Authorization": `Bearer ${JwtToken.get()}` } });
+        dispatch({ type: GET_USER, payload: id });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const getProfile = () => async dispatch => {
+    //TODO fix
+    try {
+        const api = `/users/${JwtToken.getUser()}`;
+        const response = await sts.get(api, { headers: { "Authorization": `Bearer ${JwtToken.get()}` } });
+        dispatch({ type: GET_USER, payload: response.data });
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 export const deleteUser = (id) => async dispatch => {
     //TODO fix
-    // const response = await sts.get('/users');
-    const responseTmp = users;
-    console.log('DELETE USER: ' + id);
+    try {
+        const api = `/users/${id}`;
+        const response = await sts.delete(api, { headers: { "Authorization": `Bearer ${JwtToken.get()}` } });
+        dispatch({ type: DELETE_USER, payload: id });
+    } catch (error) {
+        console.log(error);
+    }
 
 }
 
@@ -92,7 +131,7 @@ export const getBrands = () => async dispatch => {
 }
 
 //DELETE BRANDS 
-export const deleteBrand = (id)=> async dispatch => {
+export const deleteBrand = (id) => async dispatch => {
     try {
         const api = `/brands/${id}`;
         const response = await sts.delete(api, { headers: { "Authorization": `Bearer ${JwtToken.get()}` } });

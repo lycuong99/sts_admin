@@ -6,8 +6,9 @@ import { getBrands, deleteBrand } from "../actions";
 import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined';
 import AddIcon from '@material-ui/icons/Add';
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined';
-import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
+import VisibilityOutlined from '@material-ui/icons/VisibilityOutlined';
 import { brands } from '../dataTest.js/brand';
+import { Link } from 'react-router-dom';
 import _ from 'lodash';
 
 
@@ -160,8 +161,10 @@ class BrandTable extends React.Component {
                     }
 
                     return (<span>
-                        <Button className={classes.button} variant='outlined' color='primary'
-                            onClick={onClick}> <EditOutlinedIcon fontSize='small' /></Button>
+
+                        <Button className={classes.button} variant='outlined' color='primary' component={ Link } to={`/brand/${params.getValue('id')}`}
+                        > <VisibilityOutlined fontSize='small' /></Button>
+
                         <Button onClick={onClick} className={`${classes.button} ${classes.deleteButton}`} variant='outlined'> <CloseOutlinedIcon fontSize='small' /></Button>
                     </span>);
                 }

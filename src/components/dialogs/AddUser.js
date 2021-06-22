@@ -1,7 +1,9 @@
-import { Checkbox, Dialog, DialogContent, DialogContentText, DialogTitle, DialogActions, FormLabel, FormControl, Button, TextField, createStyles, withStyles, FormControlLabel } from '@material-ui/core';
+import { Checkbox, Dialog, DialogContent, DialogContentText, DialogTitle, DialogActions, FormLabel, FormControl, Button, TextField, createStyles, withStyles, FormControlLabel, Typography } from '@material-ui/core';
 import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import React from 'react';
+import sts from '../../apis/sts';
+import JwtToken from '../../jwtToken';
 
 
 const styles = (Theme) => createStyles({
@@ -42,10 +44,12 @@ class AddUser extends React.Component {
         return (
             <div>
                 <FormControlLabel style={{ marginLeft: 0 }}
-                    control={<Checkbox color="primary" />}
+                    control={<Checkbox color="primary" checked={input.value ? true : false}
+                        onChange={input.onChange} />}
                     label={label}
                     labelPlacement="start"
                 />
+
             </div>);
     }
 
@@ -62,6 +66,20 @@ class AddUser extends React.Component {
             </div>);
     }
 
+    onSubmit = async({ email, username, isAdmin, password }) => {
+        console.log({email, username, isAdmin, password});
+        
+        try {
+            const api = isAdmin? "/users/admin" : "/auth/register";
+            const response = await sts.post(api,{ email, username, password}, { headers: { "Authorization": `Bearer ${JwtToken.get()}` } });
+
+        } catch (error) {
+            console.log(error);
+        }
+
+        this.props.handleClose();
+
+    }
 
     render() {
 
@@ -71,33 +89,33 @@ class AddUser extends React.Component {
             open={this.props.open}
             aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description"
         >
-            <DialogTitle id="alert-dialog-title">{dialogTitle}</DialogTitle>
-            <DialogContent>
-                <div>
-                    <form className={this.props.classes.form}>
+            <form className={this.props.classes.form} onSubmit={this.props.handleSubmit(this.onSubmit)}>
+                <DialogTitle id="alert-dialog-title">{dialogTitle}</DialogTitle>
+                <DialogContent>
+                    <div>
                         <Field name="email" component={this.renderInput} label="Email" />
-                        <Field name="name" component={this.renderInput} label="Full name" />
+                        <Field name="username" component={this.renderInput} label="Username" />
                         <Field name="isAdmin" component={this.renderRadio} label="Is a admin ?" />
                         <Field name="password" component={this.renderPassword} label="Password" />
                         <Field name="confirm" component={this.renderPassword} label="Confirm" />
-                    </form>
-                </div>
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={this.props.handleClose} color="primary">
-                    Cancel
-</Button>
-                <Button onClick={() => { this.props.handleClose(); }} color="primary" autoFocus>
-                    Confirm
-</Button>
-            </DialogActions>
-        </Dialog>);
+
+                    </div>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={this.props.handleClose} color="primary">
+                        Cancel
+                    </Button>
+                    <Button type="submit" color="primary" autoFocus>
+                        Confirm
+                    </Button>
+                </DialogActions>
+            </form>
+        </Dialog >);
     }
 }
 
 const AddUserForm = reduxForm({
     form: "addUserForm",
-
 })(withStyles(styles)(AddUser));
 
 export default connect()(AddUserForm);

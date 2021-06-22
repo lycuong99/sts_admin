@@ -8,14 +8,14 @@ import RequireAuth from './auth/RequireAuth';
 import UserTable from './UserTable';
 import BrandTable from './BrandTable';
 import Layout from './layout';
-import Profile from './Profile';
+import Profile from './Profile/Profile';
 import theme from '../themes/Theme';
+import BrandInfo from './BrandInfo'
 import { ThemeProvider } from '@material-ui/styles';
 
 class App extends React.Component {
 
   render() {
-
     return (
       <div>
         <ThemeProvider theme={theme}>
@@ -34,6 +34,9 @@ class App extends React.Component {
                   </Route>
                   <Route path='/brand' exact >
                     <BrandTable />
+                  </Route>
+                  <Route path='/brand/:brandId'  >
+                    <BrandInfo />
                   </Route>
                   <Route path='/profile' exact >
                     <Profile />

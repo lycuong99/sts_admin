@@ -1,6 +1,6 @@
 import React from "react";
 import clsx from "clsx";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import AppBar from "@material-ui/core/AppBar";
@@ -10,17 +10,15 @@ import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+
 import ListItem from "@material-ui/core/ListItem";
-import { Chip, Drawer, Icon, useMediaQuery } from "@material-ui/core";
+import { Drawer, Icon, useMediaQuery } from "@material-ui/core";
 import GroupOutlinedIcon from '@material-ui/icons/GroupOutlined';
 import BusinessOutlinedIcon from '@material-ui/icons/BusinessOutlined';
 import ProfileIcon from "@material-ui/icons/Person";
-import StatisticalIcon from "@material-ui/icons/BarChart";
+
 import Logout from "../auth/Logout";
-import { boxShadow } from "../../jss/material";
-import { AccountCircle } from "@material-ui/icons";
+
 import ProfileSection from "./ProfileSection";
 
 
@@ -178,7 +176,7 @@ export default function MainLayout(props) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap color="textPrimary" >
+          <Typography variant="h2" noWrap color="textPrimary" >
             Web admin
           </Typography>
           <div className={classes.grow} />

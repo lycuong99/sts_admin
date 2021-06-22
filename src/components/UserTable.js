@@ -76,37 +76,40 @@ const styles = (Theme) => createStyles({
 class UserTable extends React.Component {
 
     state = {
-        searchValue: '', openDeleteDialog: false, deleteUserId: null, openAddDialog: false,
-        pageSize: 10, rowCount:0, pageIndex:0, loading:false, datas:this.props.users
+        searchValue: this.props.searchValue, openDeleteDialog: false, deleteUserId: null, openAddDialog: false,
+        pageSize: 10, rowCount: 0, pageIndex: 1, loading: false, datas: this.props.users
     };
 
     handleSearchValueChange = (event) => {
-        this.setState({ searchValue: event.target.value });
+         this.setState({ searchValue: event.target.value });
     }
 
-    handleSearchSubmit = (e)=>{
-        // console.log(e);
-        if(e.which == 13)
-        {
-            console.log('enter');
+    handleSearchSubmit = (e) => {
+        if (e.which === 13) {
+            this.props.getUsers( this.props.pageIndex,this.props.pageSize, this.state.searchValue);
         }
     }
     componentDidMount() {
-        this.props.getUsers();
+        this.props.getUsers( 1,10, "");
     }
+
+    handlePageChange = (params) => {
+        console.log(params);
+        if(params.page >= params.pageCount)
+        {
+            this.props.getUsers( 1,params.pageSize, "");
+        }else{
+            this.props.getUsers( params.page + 1,params.pageSize, "");
+        }
+      
+    };
 
     componentDidUpdate(prevProps, prevState) {
         if (prevState.pageSize !== this.state.pageSize || prevState.pageIndex !== this.state.pageIndex) {
-            const {searchValue, pageSize, pageIndex} = this.state;
-           const response = this.loadData(searchValue, pageSize, pageIndex);
+            const { searchValue, pageSize, pageIndex } = this.state;
+            const response = this.loadData(searchValue, pageSize, pageIndex);
         }
     }
-
-    loadData = (search, pageSize,pageIndex)=>{
-        return {};
-    }
-
-
 
     renderToolbar = () => {
         return (
@@ -115,7 +118,7 @@ class UserTable extends React.Component {
                     startAdornment: (<InputAdornment position="end">
                         <SearchOutlinedIcon />
                     </InputAdornment>)
-                }} value={this.state.searchValue}
+                }}
                     onChange={this.handleSearchValueChange}
                     onKeyPress={this.handleSearchSubmit} />
 
@@ -147,11 +150,11 @@ class UserTable extends React.Component {
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">
                         Cancel
-  </Button>
-                    <Button onClick={() => { this.props.deleteUser(this.state.deleteUserId); this.setState({ deleteUserId: null }); handleClose(); }} color="primary" autoFocus>
+                    </Button>
+                    <Button onClick={() => { this.props.deleteUser(this.state.deleteUserId); this.setState({ deleteUserId: "" }); handleClose(); }} color="primary" autoFocus>
                         Confirm
-  </Button>
-  
+                    </Button>
+
                 </DialogActions>
             </Dialog>
         );
@@ -161,33 +164,38 @@ class UserTable extends React.Component {
         // setPageSize(params.pageSize);
     };
 
-   
+
     render() {
         const { classes } = this.props;
         const columns = [
-            { field: 'no', headerName: 'ID', width: 70, headerClassName: 'header-table', filterable: false },
             {
+                field: 'counterStatus', headerName: 'No', width: 70, headerClassName: 'header-table', filterable: false,
+
+            },
+            {
+                field: 'username', headerName: 'Username', width: 200,
+            }, {
                 field: 'name', headerName: 'Full name', width: 200,
-                // valueGetter: (params) => {
-                //     return `${params.getValue('firstName') || ''} ${params.getValue('lastName') || ''}`
-                // }
+                valueGetter: (params) => {
+                    return `${params.getValue('firstName') || ''} ${params.getValue('lastName') || ''}`
+                }
             },
             {
-                field: 'address', headerName: 'Address', headerClassName: 'header-table', width: 160, filterable: false,  sortable: false
+                field: 'address', headerName: 'Address', headerClassName: 'header-table', width: 160, filterable: false, sortable: false
             },
             {
-                field: 'email', headerName: 'Email', flex: 1, filterable: false,  sortable: false
+                field: 'email', headerName: 'Email', flex: 1, filterable: false, sortable: false
             },
             {
-                field: 'isAdmin', headerName: 'Is Admin', width: 130, filterable: false,  sortable: false
+                field: 'isAdmin', headerName: 'Is Admin', width: 130, filterable: false, sortable: false
             },
             {
-                field: 'action', headerName: "Actions",  flex: 0.3, sortable: false, filterable: false,
+                field: 'action', headerName: "Actions", flex: 0.3, sortable: false, filterable: false,
                 headerAlign: 'center',
 
                 renderCell: (params) => {
                     const onClick = () => {
-                        this.setState({ openDeleteDialog: true, deleteUserId: params.getValue('email') });
+                        this.setState({ openDeleteDialog: true, deleteUserId: params.getValue('username') });
                         // this.setState({ deleteUserId: params.getValue('email') });
                         // alert('hello');
                     }
@@ -216,19 +224,15 @@ class UserTable extends React.Component {
             return <p>...Loading</p>;
         }
 
-        const checkCondition = (user) => {
-            return user.name.includes(this.state.searchValue) || user.email.includes(this.state.searchValue) || user.address.includes(this.state.searchValue);
-        }
-
-        const rows = this.props.users.filter(checkCondition);
 
         return (
             <Paper className={this.props.classes.container}>
                 <h2>User</h2>
                 {this.renderToolbar()}
                 <div style={{ height: 600, width: '100%' }}>
-                    <DataGrid disableColumnFilter rows={this.props.users} columns={columns} rowsPerPageOptions={[10, 20, 50]} pageSize={this.state.pageSize} pagination
-                        paginationMode="server" rowCount={100} />
+                    <DataGrid disableColumnFilter rows={this.props.users} columns={columns} rowsPerPageOptions={[10, 20, 50]} pageSize={this.props.pageSize} pagination
+                    page={this.props.pageIndex-1}
+                        paginationMode="server" rowCount={this.props.rowCount} onPageChange={this.handlePageChange} onPageSizeChange={this.handlePageChange} />
                 </div>
                 {this.renderDeleteDialog()}
                 <AddUser open={this.state.openAddDialog} handleClose={() => { this.setState({ openAddDialog: false }) }} />
@@ -238,7 +242,8 @@ class UserTable extends React.Component {
     }
 }
 const mapStateToProps = (state) => {
-    return { users: Object.values(state.users) };
+    return { users: Object.values(state.users.datas), pageIndex: state.users.currentPage, pageSize: state.users.pageSize,rowCount: state.users.totalCount,
+        searchValue:state.users.searchValue  };
 }
 
 export default connect(mapStateToProps, {

@@ -1,7 +1,7 @@
 import { DELETE_BRAND, GET_BRANDS } from "../types";
 import _ from 'lodash';
 
-export default (state = [], action) => {
+const brandReducer = (state = [], action) => {
 
     console.log(state);
     switch (action.type) {
@@ -11,4 +11,6 @@ export default (state = [], action) => {
 
         default: return state;
     }
-}
+};
+
+export default brandReducer;

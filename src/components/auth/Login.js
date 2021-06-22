@@ -1,5 +1,5 @@
 
-import { Button, Container, FormControl, FormLabel, Hidden, InputAdornment, makeStyles, TextField, Typography } from '@material-ui/core';
+import { Button, Container, FormControl, FormLabel, InputAdornment, TextField, Typography } from '@material-ui/core';
 import { LockOutlined, PersonOutline } from '@material-ui/icons';
 import React, { Component } from 'react';
 import { Field, reduxForm } from 'redux-form';
