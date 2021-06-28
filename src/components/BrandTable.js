@@ -99,7 +99,7 @@ class BrandTable extends React.Component {
                 }} value={this.state.searchValue}
                     onChange={this.handleSearchValueChange} />
 
-                <Button variant="outlined" className={this.props.classes.searchButton}> <AddIcon />ADD BRAND</Button>
+                {/* <Button variant="outlined" className={this.props.classes.searchButton}> <AddIcon />ADD BRAND</Button> */}
             </div>
         );
     }
@@ -127,10 +127,10 @@ class BrandTable extends React.Component {
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">
                         Cancel
-  </Button>
+                    </Button>
                     <Button onClick={() => { this.props.deleteBrand(this.state.deleteId); this.setState({ deleteId: null }); handleClose(); }} color="primary" autoFocus>
                         Confirm
-  </Button>
+                    </Button>
                 </DialogActions>
             </Dialog>
         );
@@ -147,7 +147,7 @@ class BrandTable extends React.Component {
                 field: 'hotline', headerName: 'Hot Line', headerClassName: 'header-table', width: 160,
             },
             {
-                field: 'totalStaffs', headerName: 'Headquarter', headerClassName: 'header-table', width: 160,
+                field: 'address', headerName: 'Headquarter', headerClassName: 'header-table', width: 160,
             },
             {
                 field: 'action', headerName: "Actions", flex: 0.3, sortable: false,
@@ -161,8 +161,7 @@ class BrandTable extends React.Component {
                     }
 
                     return (<span>
-
-                        <Button className={classes.button} variant='outlined' color='primary' component={ Link } to={`/brand/${params.getValue('id')}`}
+                        <Button className={classes.button} variant='outlined' color='primary' component={Link} to={`/brand/${params.getValue('id')}`}
                         > <VisibilityOutlined fontSize='small' /></Button>
 
                         <Button onClick={onClick} className={`${classes.button} ${classes.deleteButton}`} variant='outlined'> <CloseOutlinedIcon fontSize='small' /></Button>
@@ -185,7 +184,9 @@ class BrandTable extends React.Component {
             return <p>...Loading</p>;
         }
 
-        const rows = this.props.brands;
+        const rows = this.props.brands.filter(brand => brand.hotline.includes(this.state.searchValue)
+            || brand.name.includes(this.state.searchValue)
+            || brand.address.includes(this.state.searchValue));
 
 
         return (

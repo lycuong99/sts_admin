@@ -63,7 +63,7 @@ export const getUsers = (pageIndex, pageSize, searchValue) => async dispatch => 
         if (searchValue === "") {
             searchValue = null;
         }
-        const response = await sts.get("/users", {
+        const response = await sts.get("admin/users", {
             headers: {
                 "Authorization": `Bearer ${JwtToken.get()}`,
             },
@@ -122,7 +122,7 @@ export const deleteUser = (id) => async dispatch => {
 export const getBrands = () => async dispatch => {
     try {
         // console.log(JwtToken.get());
-        const response = await sts.get("/brands", { headers: { "Authorization": `Bearer ${JwtToken.get()}` } });
+        const response = await sts.get("/brands/all", { headers: { "Authorization": `Bearer ${JwtToken.get()}` } });
         // console.log(response);
         dispatch({ type: GET_BRANDS, payload: response.data });
     } catch (error) {

@@ -81,27 +81,26 @@ class UserTable extends React.Component {
     };
 
     handleSearchValueChange = (event) => {
-         this.setState({ searchValue: event.target.value });
+        this.setState({ searchValue: event.target.value });
     }
 
     handleSearchSubmit = (e) => {
         if (e.which === 13) {
-            this.props.getUsers( this.props.pageIndex,this.props.pageSize, this.state.searchValue);
+            this.props.getUsers(this.props.pageIndex, this.props.pageSize, this.state.searchValue);
         }
     }
     componentDidMount() {
-        this.props.getUsers( 1,10, "");
+        this.props.getUsers(1, 10, "");
     }
 
     handlePageChange = (params) => {
         console.log(params);
-        if(params.page >= params.pageCount)
-        {
-            this.props.getUsers( 1,params.pageSize, "");
-        }else{
-            this.props.getUsers( params.page + 1,params.pageSize, "");
+        if (params.page >= params.pageCount) {
+            this.props.getUsers(1, params.pageSize, "");
+        } else {
+            this.props.getUsers(params.page + 1, params.pageSize, "");
         }
-      
+
     };
 
     componentDidUpdate(prevProps, prevState) {
@@ -187,7 +186,10 @@ class UserTable extends React.Component {
                 field: 'email', headerName: 'Email', flex: 1, filterable: false, sortable: false
             },
             {
-                field: 'isAdmin', headerName: 'Is Admin', width: 130, filterable: false, sortable: false
+                field: 'isAdmin', headerName: 'Is Admin', width: 130, filterable: false, sortable: false,
+                valueGetter: (params) => {
+                    return (params.getValue("role").id == 1 ? "Admin" : "User")
+                }
             },
             {
                 field: 'action', headerName: "Actions", flex: 0.3, sortable: false, filterable: false,
@@ -203,11 +205,15 @@ class UserTable extends React.Component {
                     return (<span>
                         <Button className={classes.button} variant='outlined' color='primary'
                             onClick={onClick}> <EditOutlinedIcon fontSize='small' /></Button>
-                        <Button onClick={onClick} className={`${classes.button} ${classes.deleteButton}`} variant='outlined'> <CloseOutlinedIcon fontSize='small' /></Button>
+                        {params.getValue("role").id == 1 ? null :
+                            <Button onClick={onClick} className={`${classes.button} ${classes.deleteButton}`}
+                                variant='outlined'> <CloseOutlinedIcon fontSize='small' /></Button>}
                     </span>);
                 }
 
             }
+
+
             // {
             //     field: 'isAdmin',
             //     headerName: 'Is Admin',
@@ -226,24 +232,26 @@ class UserTable extends React.Component {
 
 
         return (
-            <Paper className={this.props.classes.container}>
+            <Paper className={this.props.classes.container} >
                 <h2>User</h2>
                 {this.renderToolbar()}
                 <div style={{ height: 600, width: '100%' }}>
                     <DataGrid disableColumnFilter rows={this.props.users} columns={columns} rowsPerPageOptions={[10, 20, 50]} pageSize={this.props.pageSize} pagination
-                    page={this.props.pageIndex-1}
+                        page={this.props.pageIndex - 1}
                         paginationMode="server" rowCount={this.props.rowCount} onPageChange={this.handlePageChange} onPageSizeChange={this.handlePageChange} />
                 </div>
                 {this.renderDeleteDialog()}
                 <AddUser open={this.state.openAddDialog} handleClose={() => { this.setState({ openAddDialog: false }) }} />
-            </Paper>
+            </Paper >
 
         );
     }
 }
 const mapStateToProps = (state) => {
-    return { users: Object.values(state.users.datas), pageIndex: state.users.currentPage, pageSize: state.users.pageSize,rowCount: state.users.totalCount,
-        searchValue:state.users.searchValue  };
+    return {
+        users: Object.values(state.users.datas), pageIndex: state.users.currentPage, pageSize: state.users.pageSize, rowCount: state.users.totalCount,
+        searchValue: state.users.searchValue
+    };
 }
 
 export default connect(mapStateToProps, {
