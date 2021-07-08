@@ -88,7 +88,7 @@ class UserTable extends React.Component {
         if (e.which === 13) {
             this.props.getUsers(this.props.pageIndex, this.props.pageSize, this.state.searchValue);
         }
-    }
+    }   
     componentDidMount() {
         this.props.getUsers(1, 10, "");
     }
@@ -247,6 +247,7 @@ class UserTable extends React.Component {
         );
     }
 }
+
 const mapStateToProps = (state) => {
     return {
         users: Object.values(state.users.datas), pageIndex: state.users.currentPage, pageSize: state.users.pageSize, rowCount: state.users.totalCount,

@@ -92,15 +92,15 @@ const Profile = () => {
         const api = `/users/password`;
         const { currentPassword, newPassword } = formValues;
 
-        
-            const response = await sts.put(api, {
-                currentPassword, newPassword
-            }, {
-                headers: { Authorization: `Bearer ${JwtToken.get()}` },
-            });
-            console.log(response);
-            setSuccessAlert(true);
-        
+
+        const response = await sts.put(api, {
+            currentPassword, newPassword
+        }, {
+            headers: { Authorization: `Bearer ${JwtToken.get()}` },
+        });
+        console.log(response);
+        setSuccessAlert(true);
+
 
 
 
@@ -112,7 +112,7 @@ const Profile = () => {
     const [userProfile, setUserProfile] = React.useState(null);
 
     const getUserProfile = async () => {
-        const api = `/users/${JwtToken.getUsername()}`;
+        const api = `/users/profile`;
         const response = await sts.get(api, { headers: { "Authorization": `Bearer ${JwtToken.get()}` } });
         const date = new Date(response.data.dob);
         response.data.dob = date;

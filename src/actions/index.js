@@ -97,7 +97,7 @@ export const getUser = (id) => async dispatch => {
 export const getProfile = () => async dispatch => {
     //TODO fix
     try {
-        const api = `/users/${JwtToken.getUser()}`;
+        const api = "/users/profile";
         const response = await sts.get(api, { headers: { "Authorization": `Bearer ${JwtToken.get()}` } });
         dispatch({ type: GET_USER, payload: response.data });
     } catch (error) {
