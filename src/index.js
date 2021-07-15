@@ -5,7 +5,7 @@ import thunk from 'redux-thunk';
 import { createStore, applyMiddleware, compose } from 'redux';
 import App from './components/App';
 import reducers from './reducers';
-import { SIGN_IN } from './types';
+import { SIGN_IN, SIGN_OUT } from './types';
 import JwtToken from './jwtToken';
 // import reportWebVitals from './reportWebVitals';
 
@@ -15,13 +15,22 @@ const composeEnhancers = (typeof window !== 'undefined' && window.__REDUX_DEVTOO
 const store = createStore(reducers, composeEnhancers(applyMiddleware(thunk)));
 
 
-if (JwtToken.get()) {
-  let username = "admin";
-  store.dispatch({
-    type: SIGN_IN, payload: {
-      username
-    }
-  });
+if (JwtToken.get()&&JwtToken.getJWTDecodeObj() ) {
+  let username = JwtToken.getUsername();
+  var user = JwtToken.getJWTDecodeObj();
+  var dateNow = new Date();
+  if (user.exp < dateNow) {
+    store.dispatch({
+      type: SIGN_OUT
+    });
+  } else {
+    store.dispatch({
+      type: SIGN_IN, payload: {
+        username
+      }
+    });
+  }
+
 }
 
 ReactDOM.render(

@@ -21,7 +21,7 @@ export const signIn = (username, password) => async (dispatch) => {
             });
             JwtToken.set(response.data.token);
             JwtToken.setUsername(username);
-
+            JwtToken.setJWTDecode(response.data.token);
             history.replace("/");
         }
     } catch (error) {
