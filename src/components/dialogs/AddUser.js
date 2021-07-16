@@ -68,9 +68,9 @@ class AddUser extends React.Component {
 
     onSubmit = async({ email, username, isAdmin, password }) => {
         console.log({email, username, isAdmin, password});
-        
+    
         try {
-            const api = isAdmin? "/users/admin" : "/auth/register";
+            const api = isAdmin? "/admin/users/admin" : "/auth/register";
             const response = await sts.post(api,{ email, username, password}, { headers: { "Authorization": `Bearer ${JwtToken.get()}` } });
 
         } catch (error) {

@@ -1,22 +1,16 @@
-import { Field, reduxForm, formValueSelector, reset, } from 'redux-form';
+import { Field, reduxForm, formValueSelector, reset, SubmissionError } from 'redux-form';
 import { withStyles, createStyles } from '@material-ui/core/styles';
 import { Box, Button, Container, FormControl, FormLabel, Grid, makeStyles, Paper, Tab, Tabs, TextField, Typography } from "@material-ui/core"
 import { connect } from 'react-redux';
 import React from 'react';
 import DateFnsUtils from '@date-io/date-fns';
-import {
-    MuiPickersUtilsProvider,
-    KeyboardTimePicker,
-    KeyboardDatePicker,
-    DatePicker,
-} from '@material-ui/pickers';
-import { SubmissionError } from 'redux-form';
 
 const styles = (Theme) => createStyles({
     input: {
         fontSize: '1em'
     },
 });
+
 class ChangePasswordForm extends React.Component {
     renderInput = ({ label, input, type = 'text', meta: { touched, invalid, error }, InputProps }) => {
         return (
@@ -34,9 +28,7 @@ class ChangePasswordForm extends React.Component {
         try {
             await this.props.onSubmit(formValues);
         } catch (e) {
-            console.log("Alo");
             console.log(e);
-            console.log("Alo");
             throw new SubmissionError({
                 currentPassword: "Current Password maybe incorrect!",
                 _error: 'Change Password failed!'
@@ -91,7 +83,7 @@ const validate = (formValues) => {
     if (formValues.newPassword !== formValues.confirmPassword) {
         error.confirmPassword = "Confirm is unmatch!"
     }
-    
+
     if (formValues.newPassword && formValues.newPassword.length < 6) {
         error.password = "Required length >=6";
     }

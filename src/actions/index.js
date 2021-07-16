@@ -21,7 +21,7 @@ export const signIn = (username, password) => async (dispatch) => {
             });
             JwtToken.set(response.data.token);
             JwtToken.setUsername(username);
-
+            JwtToken.setJWTDecode(response.data.token);
             history.replace("/");
         }
     } catch (error) {
@@ -97,7 +97,7 @@ export const getUser = (id) => async dispatch => {
 export const getProfile = () => async dispatch => {
     //TODO fix
     try {
-        const api = `/users/${JwtToken.getUser()}`;
+        const api = "/users/profile";
         const response = await sts.get(api, { headers: { "Authorization": `Bearer ${JwtToken.get()}` } });
         dispatch({ type: GET_USER, payload: response.data });
     } catch (error) {
@@ -122,7 +122,7 @@ export const deleteUser = (id) => async dispatch => {
 export const getBrands = () => async dispatch => {
     try {
         // console.log(JwtToken.get());
-        const response = await sts.get("/brands", { headers: { "Authorization": `Bearer ${JwtToken.get()}` } });
+        const response = await sts.get("/brands/all", { headers: { "Authorization": `Bearer ${JwtToken.get()}` } });
         // console.log(response);
         dispatch({ type: GET_BRANDS, payload: response.data });
     } catch (error) {
