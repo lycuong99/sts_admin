@@ -63,7 +63,7 @@ export const getUsers = (pageIndex, pageSize, searchValue) => async dispatch => 
         if (searchValue === "") {
             searchValue = null;
         }
-        const response = await sts.get("/users", {
+        const response = await sts.get("admin/users", {
             headers: {
                 "Authorization": `Bearer ${JwtToken.get()}`,
             },
