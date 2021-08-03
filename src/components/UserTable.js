@@ -88,7 +88,7 @@ class UserTable extends React.Component {
         if (e.which === 13) {
             this.props.getUsers(this.props.pageIndex, this.props.pageSize, this.state.searchValue);
         }
-    }   
+    }
     componentDidMount() {
         this.props.getUsers(1, 10, "");
     }
@@ -96,9 +96,9 @@ class UserTable extends React.Component {
     handlePageChange = (params) => {
         console.log(params);
         if (params.page >= params.pageCount) {
-            this.props.getUsers(1, params.pageSize, "");
+            this.props.getUsers(1, params.pageSize, this.state.searchValue ? this.state.searchValue : "");
         } else {
-            this.props.getUsers(params.page + 1, params.pageSize, "");
+            this.props.getUsers(params.page + 1, params.pageSize, this.state.searchValue ? this.state.searchValue : "");
         }
 
     };

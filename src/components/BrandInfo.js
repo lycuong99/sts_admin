@@ -159,7 +159,7 @@ export default function BrandInfo() {
                 <DialogTitle id="alert-dialog-title">{"something went wrong"}</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                    Brand not found or has been deleted. Back to previous page.
+                        Brand not found or has been deleted. Back to previous page.
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>

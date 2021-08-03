@@ -108,7 +108,7 @@ export const getProfile = () => async dispatch => {
 export const deleteUser = (id) => async dispatch => {
     //TODO fix
     try {
-        const api = `/users/${id}`;
+        const api = `/admin/users/${id}`;
         const response = await sts.delete(api, { headers: { "Authorization": `Bearer ${JwtToken.get()}` } });
         dispatch({ type: DELETE_USER, payload: id });
     } catch (error) {
