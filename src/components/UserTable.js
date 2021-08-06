@@ -6,7 +6,8 @@ import { getUsers, deleteUser } from "../actions";
 import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined';
 import AddIcon from '@material-ui/icons/Add';
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined';
-import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
+import VisibilityOutlinedIcon from '@material-ui/icons/VisibilityOutlined';
+
 import AddUser from './dialogs/AddUser';
 
 
@@ -204,7 +205,7 @@ class UserTable extends React.Component {
 
                     return (<span>
                         <Button className={classes.button} variant='outlined' color='primary'
-                            onClick={onClick}> <EditOutlinedIcon fontSize='small' /></Button>
+                           > <VisibilityOutlinedIcon fontSize='small' /></Button>
                         {params.getValue("role").id == 1 ? null :
                             <Button onClick={onClick} className={`${classes.button} ${classes.deleteButton}`}
                                 variant='outlined'> <CloseOutlinedIcon fontSize='small' /></Button>}

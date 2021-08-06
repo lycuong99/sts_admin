@@ -22,7 +22,7 @@ export const signIn = (username, password) => async (dispatch) => {
             JwtToken.set(response.data.token);
             JwtToken.setUsername(username);
             JwtToken.setJWTDecode(response.data.token);
-            history.replace("/");
+            history.replace("/user");
         }
     } catch (error) {
         console.log('Sign In fail');

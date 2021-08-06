@@ -15,11 +15,14 @@ const composeEnhancers = (typeof window !== 'undefined' && window.__REDUX_DEVTOO
 const store = createStore(reducers, composeEnhancers(applyMiddleware(thunk)));
 
 
-if (JwtToken.get()&&JwtToken.getJWTDecodeObj() ) {
+if (JwtToken.get() && JwtToken.getJWTDecodeObj()) {
   let username = JwtToken.getUsername();
   var user = JwtToken.getJWTDecodeObj();
   var dateNow = new Date();
-  if (user.exp < dateNow) {
+  let dateExp = new Date(user.exp * 1000);
+  if (dateExp < dateNow) {
+
+    console.log(user.exp);
     store.dispatch({
       type: SIGN_OUT
     });
