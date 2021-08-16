@@ -117,7 +117,7 @@ class Login extends Component {
                 <Container maxWidth="sm" style={{ paddingTop: '12%' }}>
                     <Typography variant="h1" style={{ textAlign: 'center' }} color='primary'>Log in</Typography>
                     <form autoComplete="off" className={classes.form} onSubmit={this.props.handleSubmit(this.onSubmit)} >
-                        <Field name="email" component={this.renderInput} label="Email" InputProps={{
+                        <Field name="email" component={this.renderInput} label="Username" InputProps={{
                             endAdornment: (<InputAdornment position="end">
                                 <PersonOutline />
                             </InputAdornment>)
@@ -148,7 +148,7 @@ const validate = (formValues) => {
     const error = {};
 
     if (!formValues.email) {
-        error.email = "You must enter a email";
+        error.email = "You must enter a username";
     }
     if (!formValues.password) {
         error.password = "You must enter a password";
