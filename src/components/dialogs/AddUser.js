@@ -40,11 +40,13 @@ class AddUser extends React.Component {
             </div>);
     }
 
-    renderRadio = ({ label, input, meta: { touched, invalid, error }, InputProps }) => {
+    renderRadio = ({ label, input, disabled, readOnly, meta: { touched, invalid, error }, InputProps, }) => {
         return (
             <div>
                 <FormControlLabel style={{ marginLeft: 0 }}
-                    control={<Checkbox color="primary" checked={input.value ? true : false}
+                    control={<Checkbox color="primary" checked={true}
+                        disabled={disabled}
+                        readOnly={readOnly}
                         onChange={input.onChange} />}
                     label={label}
                     labelPlacement="start"
@@ -66,13 +68,13 @@ class AddUser extends React.Component {
             </div>);
     }
 
-    onSubmit = async({ email, username, isAdmin, password }) => {
-        console.log({email, username, isAdmin, password});
-    
-        try {
-            const api = isAdmin? "/admin/users/admin" : "/auth/register";
-            const response = await sts.post(api,{ email, username, password}, { headers: { "Authorization": `Bearer ${JwtToken.get()}` } });
+    onSubmit = async ({ email, username, isAdmin, password }) => {
+        console.log({ email, username, isAdmin, password });
 
+        try {
+            const api = isAdmin ? "/admin/users/admin" : "/auth/register";
+            const response = await sts.post(api, { email, username, password }, { headers: { "Authorization": `Bearer ${JwtToken.get()}` } });
+          
         } catch (error) {
             console.log(error);
         }
@@ -95,7 +97,7 @@ class AddUser extends React.Component {
                     <div>
                         <Field name="email" component={this.renderInput} label="Email" />
                         <Field name="username" component={this.renderInput} label="Username" />
-                        <Field name="isAdmin" component={this.renderRadio} label="Is a admin ?" />
+                        <Field name="isAdmin" component={this.renderRadio} label="Is a admin ?" disabled={true} readOnly={true} />
                         <Field name="password" component={this.renderPassword} label="Password" />
                         <Field name="confirm" component={this.renderPassword} label="Confirm" />
 
@@ -116,6 +118,19 @@ class AddUser extends React.Component {
 
 const AddUserForm = reduxForm({
     form: "addUserForm",
+
 })(withStyles(styles)(AddUser));
 
-export default connect()(AddUserForm);
+const mapStateToProps = (state) => {
+    return {
+        initialValues: {
+            isAdmin: true
+        }
+    }
+}
+export default connect(
+
+    mapStateToProps
+    , {}
+
+)(AddUserForm);
